@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["spikegrobstein@mac.com"]
   s.homepage    = ""
   s.summary     = "Catshow extensions for File"
-  s.description = "Adds functionality to File for identifying TV Shows, Seasons, Episodes and their respective Nfo files."
+  s.description = "Adds functionality to File for identifying TV Shows, Seasons, Episodes and their respective nfo files."
   
   s.add_dependency('nokogiri')
 
