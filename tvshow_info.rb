@@ -50,23 +50,25 @@ class File
   
   class << self
     
+    # returns true if the given path contains a TV show
+    # detected by looking for a #{path}/tvshow.nfo file
     def tvshow?(path)
       path = expand_path( path )
       directory?(path) and exists?( join(path, Catshow::TVSHOW_NFO_FILENAME) )
     end
     
+    # returns true if the given path contains a season
+    # detected by looking for a directory in a tvshow directory AND the directory is called Season XX
     def season?(path)
       path = expand_path( path )
       directory?(path) and tvshow?( join(path, '..') ) and !!basename(path).match(/^Season\s+\d+$/i)
     end
     
+    # returns true if the given path piints to a video file
+    # video files have a video file extension (eg: mkv, mp4, avi) and are in a Season directory
     def episode?(path)
       path = expand_path( path )
       file?(path) and season?( join(path, '..') ) and path.end_with?( *Catshow::EPISODE_SUFFIXES )
-    end
-    
-    def about_episode(episode_path)
-      
     end
     
     # return an array of tvshow directory paths given a directory
