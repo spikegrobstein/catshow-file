@@ -73,26 +73,17 @@ class File
     
     # return an array of tvshow directory paths given a directory
     def tvshows( path )
-      Dir.open(path).collect do |f|
-        nil if f.match /^\./
-        join(path, f) if tvshow?( join(path, f) )
-      end.compact
+      collect_items( path ) { |p| tvshow?(p) }
     end
     
     # return an array of season directory paths given a tvshow directory
     def seasons(path)
-      Dir.open(path).collect do |f|
-        nil if f.match /^\./
-        join(path, f) if season?( join(path, f) )
-      end.compact
+      collect_items( path ) { |p| season?(p) }
     end
     
     # return an array of episode video file paths given a season directory
     def episodes(path)
-      Dir.open(path).collect do |f|
-        nil if f.match /^\./
-        join(path, f) if episode?( join(path, f) )
-      end.compact
+      collect_items( path ) { |p| episode?(p) }
     end
     
     # given a path to an episode, return the path to the nfo file.
@@ -107,6 +98,15 @@ class File
       return false unless tvshow?( tvshow_path)
       
       File.join(tvshow_path, Catshow::TVSHOW_NFO_FILENAME)
+    end
+    
+    private
+    
+    def collect_items(path, &block)
+      Dir.open(path).collect do |f|
+        nil if f.match /^\./
+        join(path, f) if yield( join(path, f) )
+      end.compact
     end
   end
 end
