@@ -1,4 +1,4 @@
-class Catshow
+module Catshow
   class File
   
     module Nfo
