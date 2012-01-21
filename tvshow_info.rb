@@ -14,8 +14,8 @@ class File
   module ShowInfo
     class << self
       
+      # given a path to an episode video file
       # return a hash of information about a particular episode
-      # path is a path to the episode video file
       def for_episode( path )
         xml = Nokogiri::XML( File.open(File::episode_nfo_path(path)) )
         xml = xml.xpath('episodedetails')
@@ -30,8 +30,8 @@ class File
         }
       end
       
+      # given a path to a tvshow directory
       # return a hash of information about a particular show
-      # path is a path to the tvshow directory
       def for_tvshow( path )
         xml = Nokogiri::XML( File.open(File.tvshow_nfo_path(path)) )
         xml = xml.xpath('tvshow')
