@@ -17,7 +17,7 @@ class File
       # return a hash of information about a particular episode
       # path is a path to the episode video file
       def for_episode( path )
-        xml = Nokogiri::XML( File.open(File::episode_to_nfo_path(path)) )
+        xml = Nokogiri::XML( File.open(File::episode_nfo_path(path)) )
         xml = xml.xpath('episodedetails')
         
         {
@@ -33,7 +33,7 @@ class File
       # return a hash of information about a particular show
       # path is a path to the tvshow directory
       def for_tvshow( path )
-        xml = Nokogiri::XML( File.open(File.join(path, Catshow::TVSHOW_NFO_FILENAME)) )
+        xml = Nokogiri::XML( File.open(File.tvshow_nfo_path(path)) )
         xml = xml.xpath('tvshow')
                 
         {
@@ -93,19 +93,41 @@ class File
       end.compact
     end
     
-    def episode_to_nfo_path( episode_path )
+    def episode_nfo_path( episode_path )
       return false unless episode?( episode_path )
       
       episode_path.gsub /#{ extname(episode_path) }$/, Catshow::EPISODE_NFO_FILEEXTENSION
     end
+    
+    def tvshow_nfo_path( tvshow_path )
+      return false unless tvshow?( tvshow_path)
+      
+      File.join(tvshow_path, Catshow::TVSHOW_NFO_FILENAME)
+    end
   end
 end
 
+
+tvshow_dir = "/Users/spike/Desktop/catshow_files/tv"
+File.tvshows( tvshow_dir ).each do |tvshow|
+  tvshow_info = File::ShowInfo.for_tvshow( tvshow )
+  puts tvshow_info[:title]
+  
+  File.seasons( tvshow ).each do |season|
+    puts "  #{ File.basename season }"
+    File.episodes( season ).each do |episode|
+      episode_info = File::ShowInfo.for_episode( episode )
+      puts "    #{ episode_info[:episode] } - #{ episode_info[:title] }"
+    end
+  end
+end
+
+exit
 puts "episode?"
 pp File.episode? "/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/Frisky Dingo - 1x06 - Emergency Room.avi"
 
 puts "episode_to_nfo_path"
-pp File.episode_to_nfo_path( '/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/Frisky Dingo - 1x06 - Emergency Room.avi' )
+pp File.episode_nfo_path( '/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/Frisky Dingo - 1x06 - Emergency Room.avi' )
 
 puts "Info:"
 pp File::ShowInfo::for_episode( '/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/Frisky Dingo - 1x06 - Emergency Room.avi' )
