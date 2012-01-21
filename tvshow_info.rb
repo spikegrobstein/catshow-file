@@ -102,6 +102,8 @@ class File
     
     private
     
+    # iterates over files in +path+ and collects the ones
+    # which the block evaluates to true for.
     def collect_items(path, &block)
       Dir.open(path).collect do |f|
         nil if f.match /^\./
