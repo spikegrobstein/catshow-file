@@ -1,0 +1,49 @@
+Episode
+	season_id
+	title
+	season
+	episode
+	aired
+	plot
+	watched
+	thumbnail -- filename of thumbnail
+	nfo_path
+	file_path
+	nfo_md5 -- to detect changes
+	last_check -- gets re-checked whenever season is opened, used for tidy processes
+	duration -- in seconds
+	last_viewed -- when was last viewed
+	
+Season
+	tvshow_id
+	path -- path to season
+	number
+	
+Show
+	title
+	plot
+	mpaa
+	genre
+	studio
+	path -- path to show directory
+	nfo_path -- path to nfo
+	fanart -- path to fanart
+	nfo_md5 -- to detect changes
+	last_check -- gets re-checked whenever show is loaded. used for tidy.
+	
+	
+	
+---
+
+Should also be able to look shows up on wikipedia, imdb and google, right from the app.
+
+maybe also index cast and director and stuff in the future for searchability.
+
+--
+
+structure:
+
+CatshowExt -- File extensions -- ways of identifying and directories and files and reading nfo
+CatshowPlayer -- VLC player -- play video and interact with VLC
+CatshowDB -- database -- persist information into database for searching and stuff
+CatshowFrontend -- frontend -- sinatra app to interact with a video library via webservices
