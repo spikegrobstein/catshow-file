@@ -15,15 +15,34 @@ class File
     class << self
       
       # return a hash of information about a particular episode
-      # path is a path to the nfo XML file
-      def about_episode( path )
-      
+      # path is a path to the episode video file
+      def episode( path )
+        xml = Nokogiri::XML( File.open(File::episode_to_nfo_path(path)) )
+        xml = xml.xpath('episodedetails')
+        
+        {
+          :title => xml.xpath('title').text,
+          :season => xml.xpath('season').text.to_i,
+          :episode => xml.xpath('episode').text.to_i,
+          :aired => xml.xpath('aired').text,
+          :plot => xml.xpath('plot').text,
+          :thumb => xml.xpath('thumb').text
+        }
       end
       
       # return a hash of information about a particular show
-      # path is a path to the tvshow.nfo XML file
-      def about_tvshow( path )
-        
+      # path is a path to the tvshow directory
+      def tvshow( path )
+        xml = Nokogiri::XML( File.open(path) )
+        xml = xml.xpath('tvshow')
+                
+        {
+          :title => xml.xpath('title').text,
+          :plot => xml.xpath('plot').text,
+          :mpaa => xml.xpath('mpaa').text,
+          :genre => xml.xpath('genre').text,
+          :studio => xml.xpath('studio').text
+        }
       end
       
     end
@@ -71,3 +90,11 @@ pp File.episode? "/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/F
 
 puts "episode_to_nfo_path"
 pp File.episode_to_nfo_path( '/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/Frisky Dingo - 1x06 - Emergency Room.avi' )
+
+puts "Info:"
+pp File::ShowInfo::episode( '/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/Season 01/Frisky Dingo - 1x06 - Emergency Room.avi' )
+
+puts "show info"
+show_nfo_path = '/Users/spike/Desktop/catshow_files/tv/Frisky Dingo/tvshow.nfo'
+pp File::ShowInfo::tvshow( show_nfo_path )
+pp File.exists?( show_nfo_path )
