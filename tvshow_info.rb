@@ -95,12 +95,14 @@ class File
       end.compact
     end
     
+    # given a path to an episode, return the path to the nfo file.
     def episode_nfo_path( episode_path )
       return false unless episode?( episode_path )
       
       episode_path.gsub /#{ extname(episode_path) }$/, Catshow::EPISODE_NFO_FILEEXTENSION
     end
     
+    # given a path to a tvshow, return the path to its nfo file.
     def tvshow_nfo_path( tvshow_path )
       return false unless tvshow?( tvshow_path)
       
