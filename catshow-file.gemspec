@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "catshow_file/version"
+require "catshow-file/version"
 
 Gem::Specification.new do |s|
-  s.name        = "catshow_file"
+  s.name        = "catshow-file"
   s.version     = CatshowFile::VERSION
   s.authors     = ["Spike Grobstein"]
   s.email       = ["spikegrobstein@mac.com"]

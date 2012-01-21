@@ -1,7 +1,7 @@
 require 'nokogiri'
 
-require "catshow_file/version"
-require "catshow_file/file"
+require "catshow-file/version"
+require "catshow-file/file"
 
 module Catshow
   EPISODE_SUFFIXES = %w( .mkv .avi .mp4 )
