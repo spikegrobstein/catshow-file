@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.authors     = ["Spike Grobstein"]
   s.email       = ["spikegrobstein@mac.com"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
-
-  s.rubyforge_project = "catshow_file"
+  s.summary     = "Catshow extensions for File"
+  s.description = "Adds functionality to File for identifying TV Shows, Seasons, Episodes and their respective Nfo files."
+  
+  s.add_dependency('nokogiri')
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
