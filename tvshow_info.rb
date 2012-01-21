@@ -112,7 +112,7 @@ class File
 end
 
 
-tvshow_dir = "/Users/spike/Desktop/catshow_files/tv"
+tvshow_dir = ARGV[0]
 File.tvshows( tvshow_dir ).each do |tvshow|
   tvshow_info = File::ShowInfo.for_tvshow( tvshow )
   puts tvshow_info[:title]
