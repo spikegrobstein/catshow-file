@@ -3,7 +3,7 @@ $:.push File.expand_path("../lib", __FILE__)
 require 'rubygems'
 require 'pp'
 
-require 'catshow_file'
+require 'catshow-file'
 
 ##
 # Usage: ruby example.rb <path_to_tvshows_directory>
