@@ -61,10 +61,38 @@ module CatshowFile
     path = expand_path( path )
     file?(path) and season?( join(path, '..') ) and path.end_with?( *Catshow::EPISODE_SUFFIXES )
   end
+  
+  # return the title of the current TV show
+  def tvshow( path )
+    path = expand_path( path )
+    
+    begin
+      return basename( path ) if tvshow?( path )
+    end while ( path = expand_path( File.join( path, '..' )) ) != '/'
+      
+    return false
+  end
 
   # return an array of tvshow directory paths given a directory
   def tvshows( path )
     collect_items( path ) { |p| tvshow?(p) }
+  end
+  
+  # return the season of the current directory
+  def season( path )
+    path = expand_path( path )
+    
+    begin
+      if season? path
+        basename( path ).match /(\d+)$/
+        season_number = $1.to_i
+        
+        return season_number
+      end
+      return basename( path ) if season?( path )
+    end while ( path = expand_path( File.join( path, '..' )) ) != '/'
+    
+    return false
   end
 
   # return an array of season directory paths given a tvshow directory
