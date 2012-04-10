@@ -32,16 +32,14 @@ def histogram(data)
     longest_title = k.length if k.length > longest_title
   end
   
-  max = 0
-  max_item = nil
+  max = []
   total = 0
-  
+    
   data.keys.sort.each do |k|
     next if k.nil? || k.length == 0 || k == ''
 
-    if data[k] > max
-      max = data[k]
-      max_item = k
+    if max.length == 0 || data[k] > max.first[:count]
+      max.unshift :title => k, :count => data[k]
     end
     
     total += data[k]
@@ -49,7 +47,11 @@ def histogram(data)
     puts "#{k.ljust(longest_title + 2)} #{ '#' * data[k] }"
   end
   
-  puts "Max: #{ max_item } -- #{ max }/#{ total } (#{ sprintf('%.01f', max.to_f / total.to_f * 100) }%)"
+  1.upto 3 do |i|
+    item = max.shift
+    puts "#{i}: #{ item[:title] } -- #{ item[:count] }/#{ total } (#{ sprintf('%.01f', item[:count].to_f / total.to_f * 100) }%)"
+  end
+  
   puts "==============================================="
 end
 
