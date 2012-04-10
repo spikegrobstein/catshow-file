@@ -39,7 +39,8 @@ module CatshowFile
       # return a hash of information about a particular movie
       # reads in movie.nfo
       def for_movie( path )
-        xml = Nokogiri::XML( File.open(File.movie_nfo_path(path)) )
+        path = File.movie_nfo_path(path)
+        xml = Nokogiri::XML( File.open(path) )
         xml = xml.xpath('movie')
         
         movie_data = {
@@ -49,8 +50,15 @@ module CatshowFile
           :outline => xml.xpath('outline').text,
           :runtime => xml.xpath('runtime').text,
           :release_date => xml.xpath('premiered').text,
-          :rating => xml.xpath('mpaa').text
+          :rating => xml.xpath('mpaa').text,
+          :genres => []
         }
+        
+        xml.xpath('genre').each do |g|
+          movie_data[:genres] << g.text
+        end
+        
+        movie_data
       end
     
     end
@@ -84,7 +92,7 @@ module CatshowFile
   # returns true if the given path points to a movie directory
   def movie_dir?(path)
     path = expand_path( path )
-    directory?(path) and exists?( join(path, Catshow::MOVIE_NFO_FILENAME) )
+    directory?(path) and !!movie_nfo_path( path )
   end
   
   # return the title of the current TV show
@@ -145,10 +153,26 @@ module CatshowFile
   end
   
   # given a path to a movie, return the path to its nfo file.
-  def movie_nfo_path( movie_path )
-    return false unless movie_dir?( movie_path )
+  def movie_nfo_path( movie_dir_path )
+    #return false unless movie_dir?( movie_dir_path )
     
-    File.join(movie_path, Catshow::MOVIE_NFO_FILENAME)
+    # check for default movie.nfo
+    join(movie_dir_path, Catshow::MOVIE_NFO_FILENAME).tap { |d| return d if exists?(d) }
+    
+    # otherwise, it's got the base-name of the movie
+    # find the first video file in the directory
+    # and replace its extension with '.nfo'
+    # return it if it exists, otherwise, return false
+    
+    Dir.open(movie_dir_path).each do |f|
+      next if f.match /^\./
+      next unless f.end_with?( *Catshow::EPISODE_SUFFIXES )
+      
+      File.join(movie_dir_path, f).gsub(/#{ extname(f) }$/, Catshow::EPISODE_NFO_FILEEXTENSION).tap do |candidate|
+        return candidate if File.exists?(candidate)
+        return false
+      end
+    end
   end
 
   private
