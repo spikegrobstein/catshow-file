@@ -33,6 +33,25 @@ module CatshowFile
           :studio => xml.xpath('studio').text
         }
       end
+      
+      ##
+      # given a path to a movie directory
+      # return a hash of information about a particular movie
+      # reads in movie.nfo
+      def for_movie( path )
+        xml = Nokogiri::XML( File.open(File.movie_nfo_path(path)) )
+        xml = xml.xpath('movie')
+        
+        movie_data = {
+          :title => xml.xpath('title').text,
+          :rating => xml.xpath('rating').text,
+          :year => xml.xpath('year').text,
+          :outline => xml.xpath('outline').text,
+          :runtime => xml.xpath('runtime').text,
+          :release_date => xml.xpath('premiered').text,
+          :rating => xml.xpath('mpaa').text
+        }
+      end
     
     end
   end
@@ -60,6 +79,12 @@ module CatshowFile
   def episode?(path)
     path = expand_path( path )
     file?(path) and season?( join(path, '..') ) and path.end_with?( *Catshow::EPISODE_SUFFIXES )
+  end
+  
+  # returns true if the given path points to a movie directory
+  def movie_dir?(path)
+    path = expand_path( path )
+    directory?(path) and exists?( join(path, Catshow::MOVIE_NFO_FILENAME) )
   end
   
   # return the title of the current TV show
@@ -114,9 +139,16 @@ module CatshowFile
 
   # given a path to a tvshow, return the path to its nfo file.
   def tvshow_nfo_path( tvshow_path )
-    return false unless tvshow?( tvshow_path)
+    return false unless tvshow?( tvshow_path )
   
     File.join(tvshow_path, Catshow::TVSHOW_NFO_FILENAME)
+  end
+  
+  # given a path to a movie, return the path to its nfo file.
+  def movie_nfo_path( movie_path )
+    return false unless movie_dir?( movie_path )
+    
+    File.join(movie_path, Catshow::MOVIE_NFO_FILENAME)
   end
 
   private
